@@ -25,3 +25,4 @@ class Solution:
             return((num[i]+num[i-1])/2)
         else:
             return(num[i])
+ 
