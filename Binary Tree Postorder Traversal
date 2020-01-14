@@ -1,0 +1,35 @@
+Problem Statement:
+
+Given a binary tree, return the postorder traversal of its nodes' values.
+Example:
+Input: [1,null,2,3]
+   1
+    \
+     2
+    /
+   3
+
+Output: [3,2,1]
+
+
+Solution:
+# Definition for a binary tree node.
+# class TreeNode(object):
+#     def __init__(self, x):
+#         self.val = x
+#         self.left = None
+#         self.right = None
+
+class Solution(object):
+    def postorderTraversal(self, root):
+        li=[]
+        def print_postorder(root,li):
+            if root:
+                print_postorder(root.left,li)
+                print_postorder(root.right,li)
+                li.append(root.val)
+        
+        if not root:
+            return li
+        print_postorder(root,li)
+        return li
