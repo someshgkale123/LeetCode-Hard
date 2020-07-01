@@ -1,0 +1,85 @@
+Problem Statement:
+
+Given a 2D board and a list of words from the dictionary, find all words in the board.
+Each word must be constructed from letters of sequentially adjacent cell, where "adjacent" cells are those horizontally or vertically neighboring. 
+The same letter cell may not be used more than once in a word.
+
+ 
+
+Example:
+Input: 
+board = [
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+words = ["oath","pea","eat","rain"]
+
+Output: ["eat","oath"]
+ 
+ 
+ 
+Solution:
+class Trie:
+
+    def __init__(self):
+        self.dict={}
+
+    def insert(self, word: str) -> None:
+        current=self.dict
+        for letter in word:
+            if letter not in current:
+                current[letter]={}
+            current=current[letter]
+        current["end"]=True
+
+    def search(self, word: str) -> bool:
+        current=self.dict
+        for letter in word:
+            if letter not in current:
+                return False
+            current=current[letter]
+        return "end" in current
+                
+
+    def startsWith(self, prefix: str) -> bool:
+        current=self.dict
+        for letter in prefix:
+            if letter not in current:
+                return False
+            current=current[letter]
+        return True
+
+class Solution:
+    def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
+        trie=Trie()
+        for word in words:
+            trie.insert(word)
+            
+        res=[]
+        def dfs(i,j,newstring):
+            if i<0 or i>=len(board) or j<0 or j>=len(board[0]) or board[i][j]=="V":
+                return
+           
+            newstring+=board[i][j]
+            if not trie.startsWith(newstring):
+                return
+            elif trie.search(newstring) and newstring not in res:
+                res.append(newstring)
+                
+            placeholder=board[i][j]
+            board[i][j]="V"
+            
+            dfs(i,j+1,newstring)
+            dfs(i+1,j,newstring)
+            dfs(i,j-1,newstring)
+            dfs(i-1,j,newstring)
+            
+            board[i][j]=placeholder
+            
+        
+        for i in range(len(board)):
+            for j in range(len(board[0])):
+                dfs(i,j,"")
+        return(res)
