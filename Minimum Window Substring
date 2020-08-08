@@ -1,0 +1,55 @@
+Problem Statement:
+
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+Example:
+Input: S = "ADOBECODEBANC", T = "ABC"
+Output: "BANC"
+
+
+Solution:
+ ##### O(M*N), O(N)
+        """
+        counter=collections.Counter(t)
+        prev=0
+        temp={}
+        length=float("inf")
+        value=""
+        for i in range(len(s)):
+            if s[i] in counter:
+                temp[s[i]]=temp.get(s[i],0)+1
+            while all(temp[each]>= counter[each] if each in temp else False for each in counter) and temp :
+                curr=s[prev:i+1]
+                if len(curr)<length:
+                    length=len(curr)
+                    value=curr
+                if s[prev] in counter:
+                    temp[s[prev]]-=1
+                prev+=1
+        return value
+        """
+
+
+ #### O(N),O(N)
+        counter=collections.Counter(t)
+        prev=0
+        tlength=len(counter.keys())
+        window_length=float("inf")
+        value=""
+        for i in range(len(s)):
+            if s[i] in counter:
+                counter[s[i]]-=1
+                if counter[s[i]]==0:
+                    tlength-=1
+            
+            while tlength==0:
+                curr=i-prev+1
+                if curr<window_length:
+                    window_length=curr
+                    value=s[prev:i+1]
+                if s[prev] in counter:
+                    counter[s[prev]]+=1
+                    if counter[s[prev]]==1:
+                        tlength+=1
+                prev+=1
+        return value
