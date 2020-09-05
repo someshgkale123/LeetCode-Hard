@@ -1,0 +1,43 @@
+Problem Statement:
+
+
+Given a 2D binary matrix filled with 0's and 1's, find the largest rectangle containing only 1's and return its area.
+Example:
+Input:
+[
+  ["1","0","1","0","0"],
+  ["1","0","1","1","1"],
+  ["1","1","1","1","1"],
+  ["1","0","0","1","0"]
+]
+Output: 6
+
+
+Solution:
+class Solution:
+    ############ O(N*N);O(N*N)
+    def maximalRectangle(self, matrix: List[List[str]]) -> int:
+        if not matrix or not matrix[0]:
+            return 0
+        dp=[[0 for i in range(len(matrix[0]))] for j in range(len(matrix))]
+        for i in range(len(matrix)):
+            dp[i][0]=int(matrix[i][0])
+            for j in range(1,len(matrix[0])):
+                if matrix[i][j]=="0":
+                    continue
+                else:
+                    dp[i][j]=dp[i][j-1]+1
+        self.mxarea=0
+        def findmax(li):
+            heights=[0]+li+[0]
+            stack=[]
+            for i in range(len(heights)):
+                while stack and heights[stack[-1]]>heights[i]:
+                    top=stack.pop()
+                    area=heights[top]*(i-stack[-1]-1)
+                    self.mxarea=max(area,self.mxarea)
+                stack.append(i)
+        for i in range(len(dp[0])-1,-1,-1):
+            li=[dp[each][i]for each in range(len(dp)-1,-1,-1)]
+            findmax(li)
+        return self.mxarea
