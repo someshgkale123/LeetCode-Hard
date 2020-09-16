@@ -27,7 +27,19 @@ class MedianFinder:
         self.li=[]
 
     def addNum(self, num: int) -> None:
-        bisect.insort(self.li,num)
+        ###### O(logn) insertion
+        if not self.li:
+            self.li.append(num)
+        else:
+            low=0
+            high=len(self.li)-1
+            while low<=high:
+                mid=(low+high)//2
+                if self.li[mid]<=num:
+                    low=mid+1
+                else:
+                    high=mid-1
+            self.li.insert(low,num)
 
     def findMedian(self) -> float:
         
