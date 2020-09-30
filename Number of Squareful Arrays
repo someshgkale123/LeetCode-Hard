@@ -1,0 +1,57 @@
+Problem Statement:
+
+Given an array A of non-negative integers, the array is squareful if for every pair of adjacent elements, their sum is a perfect square.
+Return the number of permutations of A that are squareful.  Two permutations A1 and A2 differ if and only if there is some index i such that A1[i] != A2[i].
+
+Example 1:
+Input: [1,17,8]
+Output: 2
+Explanation: 
+[1,8,17] and [17,8,1] are the valid permutations.
+
+Example 2:
+Input: [2,2,2]
+Output: 1
+ 
+
+Solution:
+class Solution:
+    def numSquarefulPerms(self, A: List[int]) -> int:
+        ##### O(N^N); O(N)
+        
+        # create hashmap of numbers in A
+        counter=collections.Counter(A)
+        visited=set()
+        self.cnt=0
+        
+        def getseq(index,temp,prev,cnt):
+            # if cnt becomes equal to len(A), check if combination already visited or not
+            if cnt==len(A):
+                
+                if temp not in visited:
+                    visited.add(temp)
+                    self.cnt+=1
+                return
+            # for each unique number in A
+            for i in counter.keys():
+                # if the count for number of zero, find another
+                if counter[i]==0:
+                    continue
+                
+                if temp:
+                    # check if the addition of previous and current number is perfect square or not
+                    square=prev+i
+                    if int(math.sqrt(square)+0.5)**2 !=square:
+                        continue
+                    #decrement count and add the element to current combination and recurse
+                    counter[i]-=1
+                    getseq(i,temp+str(i),i,cnt+1)
+                    # retain the count of element and backtrack
+                    counter[i]+=1
+                else:
+                    counter[i]-=1
+                    getseq(i,str(i),i,1)
+                    counter[i]+=1
+                
+        getseq(0,"",0,0)
+        return self.cnt
