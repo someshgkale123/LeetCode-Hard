@@ -1,0 +1,72 @@
+Problem Statement:
+
+The set [1,2,3,...,n] contains a total of n! unique permutations.
+By listing and labeling all of the permutations in order, we get the following sequence for n = 3:
+"123"
+"132"
+"213"
+"231"
+"312"
+"321"
+
+Given n and k, return the kth permutation sequence.
+Note:
+Given n will be between 1 and 9 inclusive.
+Given k will be between 1 and n! inclusive.
+
+Example 1:
+Input: n = 3, k = 3
+Output: "213"
+
+Example 2:
+Input: n = 4, k = 9
+Output: "2314"
+
+
+SOlution:
+class Solution:
+    def getPermutation(self, n: int, k: int) -> str:
+        #### O(N!); O(N)
+        
+        # getting split range for each numbers
+        splits=int(math.factorial(n-1))
+        currseq=0
+        
+        # finding position for k in these splits
+        index=0
+        while True:
+            index+=1
+            if currseq<=k<=currseq+splits:
+                break
+            currseq+=splits
+        self.K=currseq
+        
+        # keeping track of picked numbers
+        visited=[0]*n
+        visited[index-1]=1
+        self.ans=""
+        
+        def getpermutation(temp):
+            # if length of temp equals n, check if current K is equal to k or not
+            if len(temp)==n:
+                self.K+=1
+                if self.K==k:
+                    self.ans=temp
+                return
+             
+            # pick numbers which are not visited 
+            for i in range(len(visited)):
+                if visited[i]==1:
+                    continue
+                
+                # mark as visited
+                visited[i]=1
+                getpermutation(temp+str(i+1))
+                
+                # unmark, backtrack and try other number if available
+                visited[i]=0
+                if self.ans:
+                    return
+            
+        getpermutation(str(index))
+        return self.ans        
