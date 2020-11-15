@@ -1,0 +1,71 @@
+Problem Statement:
+
+Given a string containing just the characters '(' and ')', find the length of the longest valid (well-formed) parentheses substring.
+
+Example 1:
+Input: s = "(()"
+Output: 2
+Explanation: The longest valid parentheses substring is "()".
+
+Example 2:
+Input: s = ")()())"
+Output: 4
+Explanation: The longest valid parentheses substring is "()()".
+
+Example 3:
+Input: s = ""
+Output: 0
+ 
+ 
+Solution:
+class Solution:
+    def longestValidParentheses(self, s: str) -> int:
+        ########## O(N);O(N)
+        
+        mx=0
+        
+        # initialize stack, which will contain indices where breaks happened 
+        stack=[]
+        for i in range(len(s)):
+            
+            # if curr char is opening bracket, append in stack with index
+            if s[i]=="(":
+                stack.append((s[i],i))
+                
+            # if closing bracket, check is top of stack is opposite or not, if true pop top of stack else append in stack with index
+            elif s[i]==")":
+                if stack and stack[-1][0]=="(":
+                    stack.pop()
+                else:
+                    stack.append((s[i],i))
+                    
+        # if stack is empty i.e. all elements in s is valid
+        if not stack:
+            return len(s)
+        
+        # initialize blocks for length of s
+        dp=[0]*len(s)
+        
+        # while stack is not empty, pop element from stack and set breaks on the blocks
+        while stack:
+            char,index=stack.pop()
+            dp[index]="b"
+        
+        temp=1
+        for each in range(len(dp)):
+            # print(each,temp,mx)
+            # if break appeared, set temp to start
+            if dp[each]=="b":
+                temp=1
+                
+            # else increment temp by 1
+            else:
+                dp[each]+=temp
+                temp+=1
+            
+            # after every iteration update max of temp
+            if dp[each]!="b":
+                mx=max(mx,dp[each])
+       
+        return mx
+                
