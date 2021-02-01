@@ -1,0 +1,55 @@
+Problem Statement:
+
+There is a new alien language that uses the English alphabet. However, the order among letters are unknown to you.
+You are given a list of strings words from the dictionary, where words are sorted lexicographically by the rules of this new language.
+Derive the order of letters in this language, and return it. If the given input is invalid, return "". If there are multiple valid solutions, return any of them.
+
+Example 1:
+Input: words = ["wrt","wrf","er","ett","rftt"]
+Output: "wertf"
+
+Example 2:
+Input: words = ["z","x"]
+Output: "zx"
+
+Example 3:
+Input: words = ["z","x","z"]
+Output: ""
+Explanation: The order is invalid, so return "".
+ 
+ 
+ 
+Solution:
+class Solution:
+    def alienOrder(self, words: List[str]) -> str:
+        relation={}
+        indegree={}
+        
+        for word in words:
+            for each in word:
+                if each not in relation:
+                    relation[each]=[]
+                    indegree[each]=0
+                    
+        for word in range(1,len(words)):
+            a=words[word-1]
+            b=words[word]
+            for each in range(min(len(a),len(b))):
+                if a[each]!=b[each]:
+                    relation[a[each]].append(b[each])
+                    indegree[b[each]]+=1
+                    break
+            else:
+                if len(a)>len(b):
+                    return ""
+        
+        ans=""
+        queue=deque([each for each in relation if indegree[each]==0])
+        while queue:
+            letter=queue.popleft()
+            ans+=letter
+            for each in relation[letter]:
+                indegree[each]-=1
+                if indegree[each]==0:
+                    queue.append(each)
+        return ans if len(ans)==len(relation) else ""
